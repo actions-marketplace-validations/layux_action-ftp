@@ -8,13 +8,17 @@
   "license": "GLP",
   "scripts": {
     "build": "node builder.js --mode=production",
-    "watch": "node builder.js --mode=development"
+    "watch": "node builder.js --mode=development",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
-    "esbuild": "^0.14.27"
+    "@types/yaml": "^1.9.7",
+    "esbuild": "^0.14.27",
+    "husky": "^7.0.4"
   },
   "dependencies": {
-    "@actions/core": "^1.6.0"
+    "@actions/core": "^1.6.0",
+    "yaml": "^1.10.2"
   }
 }
