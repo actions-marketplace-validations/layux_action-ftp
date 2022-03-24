@@ -1,0 +1,20 @@
+{
+  "name": "sftp-deploy",
+  "version": "1.0.0",
+  "description": "A GitHub action to deploy files over FTP with flexible options",
+  "main": "build/index.js",
+  "repository": "https://github.com/layux/sftp-deploy",
+  "author": "MisterQuestions",
+  "license": "GLP",
+  "scripts": {
+    "build": "node builder.js --mode=production",
+    "watch": "node builder.js --mode=development"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "esbuild": "^0.14.27"
+  },
+  "dependencies": {
+    "@actions/core": "^1.6.0"
+  }
+}
