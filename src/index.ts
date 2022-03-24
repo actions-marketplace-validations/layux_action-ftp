@@ -1,28 +1,39 @@
 import * as core from '@actions/core';
 import YAML from 'yaml';
+import 'reflect-metadata';
+import { ActionInput } from './dtos/action-input.dto';
+import { Protocol } from './enums/protocol.enum';
+import { transformAndValidate } from 'class-transformer-validator';
+import { validate } from 'class-validator';
 
 const run = async () => {
   try {
-    const protocol = core.getInput('protocol');
-    const host = core.getInput('host');
-    const port = core.getInput('port');
-    const username = core.getInput('username');
-    const password = core.getInput('password');
-    const privateKey = core.getInput('private_key');
-    const localRoot = core.getInput('local_root');
-    const remoteRoot = core.getInput('remote_root');
+    const actionInput = new ActionInput();
+
+    actionInput.protocol = core.getInput('protocol') as Protocol;
+    actionInput.host = core.getInput('host');
+    actionInput.port = parseInt(core.getInput('port'), 10);
+    actionInput.username = core.getInput('username');
+    actionInput.password = core.getInput('password');
+    actionInput.private_key = core.getInput('private_key');
+    actionInput.local_root = core.getInput('local_root');
+    actionInput.remote_root = core.getInput('remote_root');
+    actionInput.passive = core.getBooleanInput('passive');
+
+    core.setSecret(actionInput.password);
+    core.setSecret(actionInput.private_key);
+
     const transfers = core.getInput('transfers');
-    const passive = core.getInput('passive');
-
-    core.setSecret(password);
-    core.setSecret(privateKey);
-
-    console.log(`protocol: ${protocol}`);
-    console.log(`transfers: ${transfers}`);
-
     const parsedTransfers = YAML.parse(transfers);
-    console.log(`parsedTransfers: ${JSON.stringify(parsedTransfers)}`);
 
+    actionInput.transfers = parsedTransfers;
+
+    const validateErrors = await validate(actionInput, {
+      forbidUnknownValues: true,
+    });
+
+    console.log({ validateErrors });
+    console.log(`parsedTransfers: ${JSON.stringify(parsedTransfers)}`);
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
   }
