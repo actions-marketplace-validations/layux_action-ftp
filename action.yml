@@ -1,6 +1,10 @@
-name: 'FTP Deploy'
+name: 'All-in-one FTP'
 description: 'A GitHub action to deploy files over FTP with flexible options'
 author: 'MisterQuestions'
+
+branding:
+  color: 'orange'
+  icon: 'upload'
 
 runs:
   using: 'node16'
