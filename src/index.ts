@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import YAML from 'yaml';
 
 const run = async () => {
   try {
@@ -18,6 +19,9 @@ const run = async () => {
 
     console.log(`protocol: ${protocol}`);
     console.log(`transfers: ${transfers}`);
+
+    const parsedTransfers = YAML.parse(transfers);
+    console.log(`parsedTransfers: ${JSON.stringify(parsedTransfers)}`);
 
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
