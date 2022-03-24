@@ -3,7 +3,6 @@ import YAML from 'yaml';
 import 'reflect-metadata';
 import { ActionInput } from './dtos/action-input.dto';
 import { Protocol } from './enums/protocol.enum';
-import { transformAndValidate } from 'class-transformer-validator';
 import { validate } from 'class-validator';
 
 const run = async () => {
@@ -29,10 +28,11 @@ const run = async () => {
     actionInput.transfers = parsedTransfers;
 
     const validateErrors = await validate(actionInput, {
-      forbidUnknownValues: true,
+      stopAtFirstError: true,
+      whitelist: true,
     });
 
-    console.log({ validateErrors });
+    console.log(`validateErrors: ${JSON.stringify(validateErrors)}`);
     console.log(`parsedTransfers: ${JSON.stringify(parsedTransfers)}`);
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
