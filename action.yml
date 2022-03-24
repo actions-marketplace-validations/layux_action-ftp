@@ -1,0 +1,44 @@
+name: 'FTP Deploy'
+description: 'A GitHub action to deploy files over FTP with flexible options'
+author: 'MisterQuestions'
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+
+inputs:
+  protocol:
+    required: false
+    description: 'Protocol for the ftp connection could be either ftp, ftps or sftp'
+    default: 'sftp'
+  host:
+    required: true
+    description: 'The address of the ftp server'
+  port:
+    required: false
+    description: 'Port of the ftp server, default is 21'
+    default: 21
+  username:
+    required: true
+    description: 'Username to use for the ftp server'
+  password:
+    required: false
+    description: 'Password or passphrase depending on the auth type (password or ssh key)'
+  private_key:
+    required: false
+    description: 'String for the private SSH key when doing SFTP, if the key has a passphrase you must pass it in the password field'
+  local_root:
+    required: false
+    description: 'Local path to use as base for all operations'
+    default: '.'
+  remote_root:
+    required: false
+    description: 'Remote server path to use as base for all operations'
+    default: '.'
+  transfers:
+    required: true
+    description: 'Array of transfer options that should be transfered to the remote server'
+  passive:
+    required: false
+    description: 'Passive mode for ftp, default is true'
+    default: true
