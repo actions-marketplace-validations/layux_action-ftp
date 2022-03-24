@@ -24,6 +24,7 @@
     "resolveJsonModule": true,
     "incremental": true,
     "noImplicitAny": true,
+    "strictPropertyInitialization": false,
     "baseUrl": ".",
     "paths": {}
   },
