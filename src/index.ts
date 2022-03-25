@@ -1,39 +1,19 @@
 import * as core from '@actions/core';
-import YAML from 'yaml';
 import 'reflect-metadata';
-import { ActionInput } from './dtos/action-input.dto';
-import { Protocol } from './enums/protocol.enum';
-import { transformAndValidate } from 'class-transformer-validator';
-import { validate } from 'class-validator';
+import { ActionInputParserService } from './input/application/action-input-parser.service';
+import { ActionInputValidator } from './input/application/action-input-validator.service';
 
 const run = async () => {
   try {
-    const actionInput = new ActionInput();
+    // Get the action input transformed into its own class
+    const inputParserService = new ActionInputParserService();
+    const actionInput = inputParserService.getActionInput();
 
-    actionInput.protocol = core.getInput('protocol') as Protocol;
-    actionInput.host = core.getInput('host');
-    actionInput.port = parseInt(core.getInput('port'), 10);
-    actionInput.username = core.getInput('username');
-    actionInput.password = core.getInput('password');
-    actionInput.private_key = core.getInput('private_key');
-    actionInput.local_root = core.getInput('local_root');
-    actionInput.remote_root = core.getInput('remote_root');
-    actionInput.passive = core.getBooleanInput('passive');
+    // Validate the action input
+    const inputValidatorService = new ActionInputValidator();
+    await inputValidatorService.validateActionInput(actionInput);
 
-    core.setSecret(actionInput.password);
-    core.setSecret(actionInput.private_key);
-
-    const transfers = core.getInput('transfers');
-    const parsedTransfers = YAML.parse(transfers);
-
-    actionInput.transfers = parsedTransfers;
-
-    const validateErrors = await validate(actionInput, {
-      forbidUnknownValues: true,
-    });
-
-    console.log({ validateErrors });
-    console.log(`parsedTransfers: ${JSON.stringify(parsedTransfers)}`);
+    // Execute action with the input values
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
   }
