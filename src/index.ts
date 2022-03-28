@@ -38,6 +38,9 @@ const run = async () => {
     await uploadOrchestratorService.uploadFiles(
       transferMapperService.mapTransfers(actionInput.transfers)
     );
+
+    // Close connection to uploader
+    await uploader.disconnect();
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
   }

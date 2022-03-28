@@ -37,6 +37,19 @@ export class SftpFileUploader implements FileUploader {
     return false;
   }
 
+  async disconnect(): Promise<boolean> {
+    try {
+      await this.sftpClient.end();
+      this.logger.info('Successfully disconnected from server');
+
+      return true;
+    } catch (error) {
+      this.logger.error(`Error disconnecting from SFTP server: ${error}`);
+    }
+
+    return false;
+  }
+
   async getFilesToUpload(localPath: string, ignoreFiles: Array<string>) {
     const transformedLocalPath = this.transformPath(localPath, false);
     this.logger.info(`Getting files to upload for ${transformedLocalPath}`);
