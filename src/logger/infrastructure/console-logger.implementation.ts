@@ -34,6 +34,7 @@ export class ConsoleLogger implements Logger {
 
   error(message: string): void {
     this.logger.error(message);
+    this.logger.error(new Error().stack);
   }
 
   debug(message: string): void {
