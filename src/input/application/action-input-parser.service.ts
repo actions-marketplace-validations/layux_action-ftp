@@ -3,6 +3,8 @@ import YAML from 'yaml';
 
 import { ActionInput } from 'src/input/domain/dtos/action-input.dto';
 import { Protocol } from '../domain/enums/protocol.enum';
+import { plainToClass, plainToInstance } from 'class-transformer';
+import { Transfer } from '../domain/dtos/transfer.dto';
 
 export class ActionInputParserService {
   getActionInput() {
@@ -24,7 +26,7 @@ export class ActionInputParserService {
     const transfers = core.getInput('transfers');
     const parsedTransfers = YAML.parse(transfers);
 
-    actionInput.transfers = parsedTransfers;
+    actionInput.transfers = plainToInstance<Transfer, Array<Transfer>>(Transfer, parsedTransfers);
 
     return actionInput;
   }
