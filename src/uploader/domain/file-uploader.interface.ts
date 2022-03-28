@@ -2,5 +2,8 @@ import { FileUploaderConnectionOptions } from "./file-uploader-connection-option
 
 export interface FileUploader {
   connect(options: FileUploaderConnectionOptions): Promise<boolean>;
-  upload(localPath: string, remotePath: string): Promise<boolean>;
+  pathExists(remotePath: string): Promise<boolean>;
+  createDirectory(remotePath: string): Promise<boolean>;
+  deleteDirectory(remotePath: string): Promise<boolean>;
+  uploadFile(localPath: string, remotePath: string): Promise<boolean>;
 }

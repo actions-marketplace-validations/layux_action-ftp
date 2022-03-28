@@ -27,7 +27,50 @@ export class SftpFileUploader implements FileUploader {
     return false;
   }
 
-  async upload(localPath: string, remotePath: string): Promise<boolean> {
+  async pathExists(remotePath: string): Promise<boolean> {
+    try {
+      const exists = await this.sftpClient.exists(remotePath);
+
+      if (exists) {
+        this.logger.debug(`Path ${remotePath} exists`);
+        return true;
+      }
+    } catch (error) {
+      this.logger.error(
+        `Error checking if path ${remotePath} exists: ${error}`
+      );
+    }
+
+    return false;
+  }
+
+  async createDirectory(remotePath: string): Promise<boolean> {
+    try {
+      await this.sftpClient.mkdir(remotePath, true);
+      this.logger.info(`Successfully created directory ${remotePath}`);
+
+      return true;
+    } catch (error) {
+      this.logger.error(`Error creating directory ${remotePath}: ${error}`);
+    }
+
+    return false;
+  }
+
+  async deleteDirectory(remotePath: string): Promise<boolean> {
+    try {
+      await this.sftpClient.rmdir(remotePath, true);
+      this.logger.info(`Successfully deleted directory ${remotePath}`);
+
+      return true;
+    } catch (error) {
+      this.logger.error(`Error deleting directory ${remotePath}: ${error}`);
+    }
+
+    return false;
+  }
+
+  async uploadFile(localPath: string, remotePath: string): Promise<boolean> {
     return false;
   }
 }
