@@ -12,9 +12,10 @@ export class ActionInputValidator {
     });
 
     if (validateErrors.length > 0) {
+      this.logger.debug(JSON.stringify(actionInput));
       const errorMessages = validateErrors.map((error) => error.toString());
       this.logger.error(`Action input validation failed: ${errorMessages}`);
-      throw new Error(errorMessages.join('\n'));
+      throw new Error('Action input validation failed, see logs for details');
     }
 
     this.logger.info('Action input validation passed');

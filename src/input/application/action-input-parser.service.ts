@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import YAML from 'yaml';
 
-import { ActionInput } from "src/input/domain/dtos/action-input.dto";
+import { ActionInput } from 'src/input/domain/dtos/action-input.dto';
 import { Protocol } from '../domain/enums/protocol.enum';
 
 export class ActionInputParserService {
@@ -18,8 +18,8 @@ export class ActionInputParserService {
     actionInput.remote_root = core.getInput('remote_root');
     actionInput.passive = core.getBooleanInput('passive');
 
-    core.setSecret(actionInput.password);
-    core.setSecret(actionInput.private_key);
+    if (actionInput.password) core.setSecret(actionInput.password);
+    if (actionInput.private_key) core.setSecret(actionInput.private_key);
 
     const transfers = core.getInput('transfers');
     const parsedTransfers = YAML.parse(transfers);
