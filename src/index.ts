@@ -25,6 +25,7 @@ const run = async () => {
       username: actionInput.username,
       password: actionInput.password,
       privateKey: actionInput.private_key,
+      localRootPath: actionInput.local_root,
       remoteRootPath: actionInput.remote_root,
     });
 

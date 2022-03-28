@@ -8,15 +8,15 @@ export class ActionInputParserService {
   getActionInput() {
     const actionInput = new ActionInput();
 
-    actionInput.protocol = core.getInput('protocol') as Protocol;
+    actionInput.protocol = core.getInput('protocol') as Protocol || Protocol.Ftp;
     actionInput.host = core.getInput('host');
-    actionInput.port = parseInt(core.getInput('port'), 10);
+    actionInput.port = parseInt(core.getInput('port'), 10) || 21;
     actionInput.username = core.getInput('username');
     actionInput.password = core.getInput('password');
     actionInput.private_key = core.getInput('private_key');
-    actionInput.local_root = core.getInput('local_root');
-    actionInput.remote_root = core.getInput('remote_root');
-    actionInput.passive = core.getBooleanInput('passive');
+    actionInput.local_root = core.getInput('local_root') || '.';
+    actionInput.remote_root = core.getInput('remote_root') || '.';
+    actionInput.passive = core.getBooleanInput('passive') || true;
 
     if (actionInput.password) core.setSecret(actionInput.password);
     if (actionInput.private_key) core.setSecret(actionInput.private_key);

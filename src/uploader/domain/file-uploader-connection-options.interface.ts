@@ -4,5 +4,6 @@ export interface FileUploaderConnectionOptions {
   username: string;
   privateKey: string;
   password: string;
+  localRootPath: string;
   remoteRootPath: string;
 }
