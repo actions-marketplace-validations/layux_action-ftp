@@ -47,7 +47,7 @@ export class ActionInput {
   @IsDefined()
   @IsArray()
   @Type(() => Transfer)
-  @ValidateNested()
+  @ValidateNested({ each: true })
   transfers: Array<Transfer>;
 
   @IsOptional()

@@ -8,9 +8,9 @@ export class ActionInputValidator {
 
   async validateActionInput(actionInput: ActionInput) {
     const validateErrors = await validate(actionInput, {
-      forbidUnknownValues: true,
+      whitelist: true,
     });
-    
+
     this.logger.log(`Action input: ${JSON.stringify(actionInput)}`);
     this.logger.log(`Validate errors: ${JSON.stringify(validateErrors)}`);
 
