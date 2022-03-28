@@ -1,15 +1,19 @@
 import path from 'path';
-import { LoggerFactory } from 'src/logger/application/logger.factory';
 import SftpClient from 'ssh2-sftp-client';
 
+import { LoggerFactory } from 'src/logger/application/logger.factory';
 import { FileUploaderConnectionOptions } from '../domain/file-uploader-connection-options.interface';
 import { FileUploader } from '../domain/file-uploader.interface';
+import { FileService } from './file.service';
+import glob from 'glob';
 
 export class SftpFileUploader implements FileUploader {
   private readonly logger = LoggerFactory.getLogger(SftpFileUploader.name);
   private readonly sftpClient = new SftpClient();
   private localRootPath: string = '.';
   private remoteRootPath: string = '.';
+
+  constructor(private readonly fileService: FileService) {}
 
   async connect(options: FileUploaderConnectionOptions): Promise<boolean> {
     try {
@@ -31,6 +35,22 @@ export class SftpFileUploader implements FileUploader {
     }
 
     return false;
+  }
+
+  async getFilesToUpload(localPath: string, ignoreFiles: Array<string>) {
+    const transformedLocalPath = this.transformPath(localPath, false);
+    this.logger.info(`Getting files to upload for ${transformedLocalPath}`);
+
+    // If the path is a file directly then it makes sense to add it to the list
+    const isFile = await this.fileService.isFile(transformedLocalPath);
+
+    if (isFile) {
+      return [transformedLocalPath];
+    }
+
+    // Otherwise it may be a pattern to match files
+    // look for all files matching and return them in an array
+    return glob.sync(transformedLocalPath, { ignore: ignoreFiles });
   }
 
   async pathExists(remotePath: string): Promise<boolean> {
