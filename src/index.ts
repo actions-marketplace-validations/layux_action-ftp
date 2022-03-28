@@ -1,39 +1,40 @@
 import * as core from '@actions/core';
-import YAML from 'yaml';
 import 'reflect-metadata';
-import { ActionInput } from './dtos/action-input.dto';
-import { Protocol } from './enums/protocol.enum';
-import { validate } from 'class-validator';
+import { ActionInputParserService } from './input/application/action-input-parser.service';
+import { ActionInputValidator } from './input/application/action-input-validator.service';
+import { TransferMapperService } from './input/application/transfer-mapper.service';
+import { FileUploaderFactory } from './uploader/application/file-uploader.factory';
+import { UploadOrchestratorService } from './uploader/application/upload-orchestrator.service';
 
 const run = async () => {
   try {
-    const actionInput = new ActionInput();
+    // Get the action input transformed into its own class
+    const inputParserService = new ActionInputParserService();
+    const actionInput = inputParserService.getActionInput();
 
-    actionInput.protocol = core.getInput('protocol') as Protocol;
-    actionInput.host = core.getInput('host');
-    actionInput.port = parseInt(core.getInput('port'), 10);
-    actionInput.username = core.getInput('username');
-    actionInput.password = core.getInput('password');
-    actionInput.private_key = core.getInput('private_key');
-    actionInput.local_root = core.getInput('local_root');
-    actionInput.remote_root = core.getInput('remote_root');
-    actionInput.passive = core.getBooleanInput('passive');
+    // Validate the action input
+    const inputValidatorService = new ActionInputValidator();
+    await inputValidatorService.validateActionInput(actionInput);
 
-    core.setSecret(actionInput.password);
-    core.setSecret(actionInput.private_key);
+    // Create connection that will later be used by the uploader
+    const uploader = FileUploaderFactory.getFileUploader();
 
-    const transfers = core.getInput('transfers');
-    const parsedTransfers = YAML.parse(transfers);
-
-    actionInput.transfers = parsedTransfers;
-
-    const validateErrors = await validate(actionInput, {
-      stopAtFirstError: true,
-      whitelist: true,
+    await uploader.connect({
+      host: actionInput.host,
+      port: actionInput.port,
+      username: actionInput.username,
+      password: actionInput.password,
+      privateKey: actionInput.private_key,
+      remoteRootPath: actionInput.remote_root,
     });
 
-    console.log(`validateErrors: ${JSON.stringify(validateErrors)}`);
-    console.log(`parsedTransfers: ${JSON.stringify(parsedTransfers)}`);
+    // Execute action with the input values
+    const uploadOrchestratorService = new UploadOrchestratorService(uploader);
+    const transferMapperService = new TransferMapperService();
+
+    await uploadOrchestratorService.uploadFiles(
+      transferMapperService.mapTransfers(actionInput.transfers)
+    );
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
   }

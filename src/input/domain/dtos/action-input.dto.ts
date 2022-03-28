@@ -9,7 +9,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { Protocol } from 'src/enums/protocol.enum';
+import { Protocol } from 'src/input/domain/enums/protocol.enum';
 import { Transfer } from './transfer.dto';
 
 export class ActionInput {
