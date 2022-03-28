@@ -10,9 +10,11 @@ export class ActionInputValidator {
     const validateErrors = await validate(actionInput, {
       forbidUnknownValues: true,
     });
+    
+    this.logger.log(`Action input: ${JSON.stringify(actionInput)}`);
+    this.logger.log(`Validate errors: ${JSON.stringify(validateErrors)}`);
 
     if (validateErrors.length > 0) {
-      this.logger.log(JSON.stringify(actionInput));
       const errorMessages = validateErrors.map((error) => error.toString());
       this.logger.error(`Action input validation failed: ${errorMessages}`);
       throw new Error('Action input validation failed, see logs for details');
