@@ -9,6 +9,8 @@ export class UploadOrchestratorService {
   constructor(private readonly fileUploader: FileUploader) {}
 
   async uploadFiles(transfers: Array<Transfer>) {
+    this.logger.info(`Starting transfer using ${transfers}`);
+
     try {
       for (const transfer of transfers) {
         this.logger.info(`Starting transfer of ${transfer.localPath} to ${transfer.remotePath}`);
