@@ -1,4 +1,4 @@
-import { transformAndValidate } from 'class-transformer-validator';
+import { validate } from 'class-validator';
 import { LoggerFactory } from 'src/logger/application/logger.factory';
 
 import { ActionInput } from '../domain/dtos/action-input.dto';
@@ -7,11 +7,7 @@ export class ActionInputValidator {
   private readonly logger = LoggerFactory.getLogger(ActionInputValidator.name);
 
   async validateActionInput(actionInput: ActionInput) {
-    const validateErrors = await transformAndValidate(
-      ActionInput,
-      actionInput,
-      { validator: { whitelist: true } }
-    );
+    const validateErrors = await validate(actionInput, { whitelist: true });
 
     this.logger.log(`Action input: ${JSON.stringify(actionInput)}`);
     this.logger.log(`Validate errors: ${JSON.stringify(validateErrors)}`);

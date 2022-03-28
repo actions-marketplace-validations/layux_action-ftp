@@ -10,7 +10,8 @@ export class ActionInputParserService {
   getActionInput() {
     const actionInput = new ActionInput();
 
-    actionInput.protocol = core.getInput('protocol') as Protocol || Protocol.Ftp;
+    actionInput.protocol =
+      (core.getInput('protocol') as Protocol) || Protocol.Ftp;
     actionInput.host = core.getInput('host');
     actionInput.port = parseInt(core.getInput('port'), 10) || 21;
     actionInput.username = core.getInput('username');
@@ -26,7 +27,12 @@ export class ActionInputParserService {
     const transfers = core.getInput('transfers');
     const parsedTransfers = YAML.parse(transfers);
 
-    actionInput.transfers = plainToInstance<Transfer, Array<Transfer>>(Transfer, parsedTransfers);
+    actionInput.transfers = plainToInstance<Transfer, Array<Transfer>>(
+      Transfer,
+      parsedTransfers
+    );
+
+    console.log({ transfers: actionInput.transfers });
 
     return actionInput;
   }
