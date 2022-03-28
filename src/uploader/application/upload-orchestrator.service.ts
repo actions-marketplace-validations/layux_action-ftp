@@ -1,9 +1,14 @@
+import glob from 'glob';
 import { FileService } from './file.service';
 
 export class UploadOrchestratorService {
   private readonly fileService = new FileService();
 
-  async getFilesToUpload(localPath: string, ignoreFiles: Array<string>) {
+  async uploadFiles() {
+
+  }
+
+  private async getFilesToUpload(localPath: string, ignoreFiles: Array<string>) {
     // If path is a directory when we want all the files inside it
     // except the ones that are in ignoreFiles
     const isDirectory = await this.fileService.isDirectory(localPath);
@@ -21,8 +26,6 @@ export class UploadOrchestratorService {
 
     // Otherwise it may be a pattern to match files
     // look for all files matching and return them in an array
-    
+    return glob.sync(localPath, { ignore: ignoreFiles });
   }
-
-
 }
