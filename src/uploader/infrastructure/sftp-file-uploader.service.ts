@@ -18,6 +18,8 @@ export class SftpFileUploader implements FileUploader {
         privateKey: options.privateKey,
         passphrase: options.password,
       });
+
+      this.logger.info('Successfully connected to server');
     } catch (error) {
       this.logger.error(`Error connecting to SFTP server: ${error}`);
     }
