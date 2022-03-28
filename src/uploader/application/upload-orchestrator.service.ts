@@ -1,3 +1,4 @@
+import path from 'path';
 import { LoggerFactory } from 'src/logger/application/logger.factory';
 import { FileUploader } from '../domain/file-uploader.interface';
 import { Transfer } from '../domain/transfer.interface';
@@ -52,7 +53,7 @@ export class UploadOrchestratorService {
         for (const fileToUpload of filesToUpload) {
           const uploaded = await this.fileUploader.uploadFile(
             fileToUpload,
-            transfer.remotePath
+            path.join(transfer.remotePath, path.basename(fileToUpload))
           );
 
           if (uploaded) {
