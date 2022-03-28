@@ -13,7 +13,7 @@ export class UploadOrchestratorService {
 
     try {
       for (const transfer of transfers) {
-        this.logger.info(`Starting transfer of ${transfer.localPath} to ${transfer.remotePath}`);
+        this.logger.info(`Starting transfer of '${transfer.localPath}' to '${transfer.remotePath}'`);
 
         // Get the files to upload
         const filesToUpload = await this.fileUploader.getFilesToUpload(
@@ -30,6 +30,7 @@ export class UploadOrchestratorService {
         }
 
         this.logger.info(`Found ${filesToUpload.length} files to upload`);
+        this.logger.info(JSON.stringify(filesToUpload));
 
         // If transfer is marked as forceClean then we need to delete the remote directory first
         if (transfer.forceClean) {
@@ -55,11 +56,11 @@ export class UploadOrchestratorService {
 
           if (uploaded) {
             this.logger.info(
-              `Successfully uploaded ${fileToUpload} to ${transfer.remotePath}`
+              `Successfully uploaded '${fileToUpload}'.`
             );
           } else {
             this.logger.error(
-              `Failed to upload ${fileToUpload} to ${transfer.remotePath}`
+              `Failed to upload '${fileToUpload}'.`
             );
           }
         }
