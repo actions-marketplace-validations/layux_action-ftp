@@ -1,4 +1,10 @@
-import { IsDefined, IsString, IsOptional, IsBoolean } from 'class-validator';
+import {
+  IsDefined,
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsArray,
+} from 'class-validator';
 
 export class Transfer {
   @IsDefined()
@@ -16,4 +22,9 @@ export class Transfer {
   @IsOptional()
   @IsString()
   permissions: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  ignore: Array<string>;
 }
