@@ -28,6 +28,10 @@ export class ConsoleLogger implements Logger {
     this.logger.info(message);
   }
 
+  warn(message: string): void {
+    this.logger.warn(message);
+  }
+
   error(message: string): void {
     this.logger.error(message);
   }
