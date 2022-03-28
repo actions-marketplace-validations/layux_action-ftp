@@ -44,6 +44,7 @@ export class UploadOrchestratorService {
         );
 
         if (!remotePathExists) {
+          this.logger.warn(`Remote path '${transfer.remotePath}' does not exist, creating it`);
           await this.fileUploader.createDirectory(transfer.remotePath);
         }
 
