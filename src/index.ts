@@ -33,6 +33,8 @@ const run = async () => {
     const uploadOrchestratorService = new UploadOrchestratorService(uploader);
     const transferMapperService = new TransferMapperService();
 
+    console.log({ transfers: actionInput.transfers });
+
     await uploadOrchestratorService.uploadFiles(
       transferMapperService.mapTransfers(actionInput.transfers)
     );
