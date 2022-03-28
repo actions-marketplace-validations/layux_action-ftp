@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import 'reflect-metadata';
 import { ActionInputParserService } from './input/application/action-input-parser.service';
 import { ActionInputValidator } from './input/application/action-input-validator.service';
+import { TransferMapperService } from './input/application/transfer-mapper.service';
 import { FileUploaderFactory } from './uploader/application/file-uploader.factory';
 import { UploadOrchestratorService } from './uploader/application/upload-orchestrator.service';
 
@@ -28,8 +29,12 @@ const run = async () => {
     });
 
     // Execute action with the input values
-    const uploadOrchestratorService = new UploadOrchestratorService();
-    await uploadOrchestratorService.uploadFiles();
+    const uploadOrchestratorService = new UploadOrchestratorService(uploader);
+    const transferMapperService = new TransferMapperService();
+
+    await uploadOrchestratorService.uploadFiles(
+      transferMapperService.mapTransfers(actionInput.transfers)
+    );
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
   }
